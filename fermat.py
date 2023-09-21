@@ -15,32 +15,56 @@ def mod_exp(x, y, N):
         return (x * z * z) % N
 
 def fprobability(k):
-    # You will need to implement this function and change the return value.   
-    return 0.0
-
+    return (1 - 1/2**k) 
 
 def mprobability(k):
-    # You will need to implement this function and change the return value.   
-    return 0.0
+    return (1 - 1/4**k) 
 
 def run_fermat(N,k): 
-    if N <= 1:
+    # Base cases for n < 3
+    if N <= 1: 
         return 'composite'
-    if N == 2 or N == 3:
+    if N == 2 or N == 3: 
         return 'prime'
 
-    for _ in range(k):
-        a = random.randint(2, N - 2)
-        if mod_exp(a, N - 1, N) != 1:
+    # Even integers can't be prime
+    if N % 2 == 0:
+        return 'composite'
+
+    # Fermat algorithm
+    for _ in range(k): # do the test k times
+        a = random.randint(2, N - 2) 
+        if mod_exp(a, N-1, N) != 1:
             return 'composite'
     
     return 'prime'
 
 def run_miller_rabin(N,k):
-    # You will need to implement this function and change the return value, which should be
-    # either 'prime' or 'composite'.
-    #
-    # To generate random values for a, you will most likley want to use
-    # random.randint(low,hi) which gives a random integer between low and
-    #  hi, inclusive.
-    return 'composite'
+    # Base cases for n < 3
+    if N <= 1: 
+        return 'composite'
+    if N == 2 or N == 3: 
+        return 'prime'
+
+    # Even integers can't be prime
+    if N % 2 == 0:
+        return 'composite'
+
+    # Miller-Rabin Algorithm   
+    r, d = 0, N - 1
+    while d % 2 == 0:
+        r += 1
+        d //= 2
+
+    for _ in range(k):
+        a = random.randint(2, N - 2)
+        x = pow(a, d, N)
+        if x == 1 or x == N - 1:
+            continue
+        for _ in range(r - 1):
+            x = pow(x, 2, N)
+            if x == N - 1:
+                break
+        else:
+            return "composite"
+    return "prime"
