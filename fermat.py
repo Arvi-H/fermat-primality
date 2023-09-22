@@ -53,9 +53,10 @@ def run_miller_rabin(N,k):
         return 'composite'
 
     # Miller-Rabin Algorithm   
-    r, d = 0, N - 1
-    while d % 2 == 0:  # O(n)
-        r += 1
+    # exponent = the largest power of 2 that divides N - 1
+    exponent, d = 0, N - 1
+    while d % 2 == 0:  # O(n) # iterate and find that exponent
+        exponent += 1 
         d //= 2
 
     for _ in range(k): # O(k)
@@ -63,7 +64,7 @@ def run_miller_rabin(N,k):
         x = mod_exp(a, d, N)   # O(N^3)
         if x == 1 or x == N - 1:
             continue
-        for _ in range(r - 1):  # O(r)
+        for _ in range(exponent - 1):  # O(exponent)
             x = mod_exp(x, 2, N) # O(N^3)
             if x == N - 1:
                 break
